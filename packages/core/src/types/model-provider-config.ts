@@ -4,6 +4,8 @@ export interface ModelProviderConfig {
   type: ModelType;
   apiBaseUrl: string;
   apiKey?: string;
+  // Model to compute the embeddings. Supported for OpenAI only for now
+  embeddingsModel?: string;
 
   // Model provider specific options.
   // All fields except for model-name and api-key! Those two fields are overridden based on the model selected in UI and apiBaseUrl above!
