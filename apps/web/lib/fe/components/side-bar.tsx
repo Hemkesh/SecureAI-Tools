@@ -9,6 +9,7 @@ import {
   HiOutlineCog,
   HiFolder,
 } from "react-icons/hi";
+import { RiNotionFill } from "react-icons/ri";
 import { tw } from "twind";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
@@ -19,7 +20,7 @@ import { getInitials } from "lib/core/name-utils";
 
 import { clip } from "@repo/core";
 
-type ActiveItem = "new-chat" | "chat-history" | "document-collections";
+type ActiveItem = "new-chat" | "chat-history" | "document-collections" | "notion";
 
 export function Sidebar({
   orgSlug,
@@ -43,13 +44,13 @@ export function Sidebar({
       <FlowbiteSidebar.Logo
         href={FrontendRoutes.APP_HOME}
         img="/logo.png"
-        imgAlt="SecureAI Tools logo"
+        imgAlt="Village logo"
         className={tw("mt-8")}
         onClick={(e) => {
           e.preventDefault();
         }}
       >
-        SecureAI Tools
+        Village
       </FlowbiteSidebar.Logo>
       <FlowbiteSidebar.Items>
         <FlowbiteSidebar.ItemGroup>
@@ -69,13 +70,21 @@ export function Sidebar({
           >
             Chat History
           </FlowbiteSidebar.Item>
-          <FlowbiteSidebar.Item
+          {/* <FlowbiteSidebar.Item
             href={FrontendRoutes.getDocumentCollectionsRoute(orgSlug)}
             icon={HiFolder}
             className={tw("mt-2")}
             active={activeItem === "document-collections"}
           >
             Document Collections
+          </FlowbiteSidebar.Item> */}
+          <FlowbiteSidebar.Item
+            href="https://notion.so"
+            icon={RiNotionFill}
+            className={tw("mt-2")}
+            active={activeItem === "document-collections"}
+          >
+            Notion
           </FlowbiteSidebar.Item>
         </FlowbiteSidebar.ItemGroup>
         <FlowbiteSidebar.ItemGroup

@@ -1,6 +1,6 @@
 export const DOMAIN_NAME = "SecureAI.tools";
 export const TWITTER_HANDLE = "SecureAI_tools";
-export const PUBLIC_FACING_NAME = "SecureAI Tools";
+export const PUBLIC_FACING_NAME = "Village";
 export const MARKETING_SITE = `https://${DOMAIN_NAME}`;
 
 export const PRIMARY_COLOR = "#6366F1";

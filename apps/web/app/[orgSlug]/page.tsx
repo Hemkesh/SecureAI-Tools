@@ -6,7 +6,7 @@ import { Sidebar } from "lib/fe/components/side-bar";
 import AppsLoggedInLayout from "lib/fe/components/apps-logged-in-layout";
 
 export const metadata: Metadata = {
-  title: "Home | SecureAI Tools",
+  title: "Home | Village",
 };
 
 const OrgIndexPage = ({ params }: { params: { orgSlug: string } }) => {
