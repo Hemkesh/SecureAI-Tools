@@ -27,12 +27,15 @@ import {
   PAGINATION_STARTING_PAGE_NUMBER,
   dataSourceToReadableName,
 } from "@repo/core";
+import { SearchDropdown } from "../search-dropdown";
 
 export const DocumentsSelectorModal = ({
   dataSource,
   dataSourceConnectionId,
   selectedDocuments,
   show,
+  hoa,
+  setHoa,
   onDocumentsSelected,
   onClose,
 }: {
@@ -40,6 +43,8 @@ export const DocumentsSelectorModal = ({
   dataSourceConnectionId: Id<IdType.DataSourceConnection>;
   selectedDocuments: SelectedDocument[];
   show: boolean;
+  hoa: string;
+  setHoa: (hoa: string) => void;
   onDocumentsSelected: (
     dataSource: DataSource,
     newSelection: SelectedDocument[],
@@ -50,6 +55,7 @@ export const DocumentsSelectorModal = ({
   const [currentlySelectedDocuments, setCurrentlySelectedDocuments] =
     useState<SelectedDocument[]>(selectedDocuments);
   const [searchQueryInput, setSearchQueryInput] = useState<string>("");
+  const [selectedHOA, setSelectedHOA] = useState<string>(hoa);
   const debouncedSearchQuery = useDebounce(searchQueryInput);
 
   const {
@@ -103,6 +109,9 @@ export const DocumentsSelectorModal = ({
   const renderCells: RenderCellsFn<DataSourceConnectionDocumentResponse> = ({
     item,
   }) => {
+    if (item.metadata?.storage_path != parseInt(selectedHOA)) {
+      return []
+    }
     return [
       <div>
         <Checkbox
@@ -148,7 +157,7 @@ export const DocumentsSelectorModal = ({
       setCurrentlySelectedDocuments((old) => {
         const newItems: SelectedDocument[] = [];
         dataSourceDocumentsResponse.response.forEach((d) => {
-          if (!selectedExternalIds.has(d.externalId)) {
+          if (!selectedExternalIds.has(d.externalId) && d.metadata?.storage_path == parseInt(selectedHOA)) {
             newItems.push({
               dataSource: dataSource,
               externalId: d.externalId,
@@ -175,7 +184,7 @@ export const DocumentsSelectorModal = ({
 
   const pageCheckboxChecked =
     (dataSourceDocumentsResponse?.response?.length ?? 0) > 0 &&
-    dataSourceDocumentsResponse?.response.every((d) =>
+    dataSourceDocumentsResponse?.response.filter((d) => d.metadata?.storage_path == parseInt(selectedHOA)).every((d) =>
       selectedExternalIds.has(d.externalId),
     );
   const readableName = dataSourceToReadableName(dataSource);
@@ -187,77 +196,105 @@ export const DocumentsSelectorModal = ({
       onClose={onClose}
       dismissible
     >
-      <Modal.Header>Select documents from {readableName}</Modal.Header>
+      <Modal.Header>
+        <SearchDropdown
+          items={[
+            {
+              label: "Amhurst",
+              id: "1",
+            },
+            {
+              label: "CreekHaven",
+              id: "2",
+            },
+            {
+              label: "Woodmont",
+              id: "3",
+            },
+          ]}
+          label="Select HOA"
+          initialValue={selectedHOA}
+          onChange={(item) => {
+            setSelectedHOA(item.id);
+            setHoa(item.id);
+          }}
+        />
+      </Modal.Header>
       <Modal.Body>
-        <div>
-          {dataSourceDocumentsFetchError ? (
-            <Alert
-              color="failure"
-              icon={HiOutlineExclamation}
-              className={tw("mb-3")}
-            >
-              <div>
-                <h1 className={tw("text font-semibold mb-1")}>
-                  Could not get documents!
-                </h1>
-                <div className={tw("text-xs")}>
-                  Encountered an unexpected error while fetching documents from{" "}
-                  {readableName}. This could be due to {readableName} being
-                  temporarily unavailable.
-                </div>
-                <Button
-                  onClick={() => {
-                    mutateDataSourceDocumentsResponse();
-                  }}
-                  size="xs"
-                  className={tw("mt-1")}
+        {
+          selectedHOA == "" ? <div>
+            <h2>Please select an HOA to view documents</h2>
+          </div> :
+            <div>
+              {dataSourceDocumentsFetchError ? (
+                <Alert
+                  color="failure"
+                  icon={HiOutlineExclamation}
+                  className={tw("mb-3")}
                 >
-                  Try again
-                </Button>
-              </div>
-            </Alert>
-          ) : null}
-          <div className={tw("mb-4")}>
-            <TextInput
-              id="search"
-              name="search"
-              placeholder="Search documents"
-              value={searchQueryInput}
-              onChange={(event) => {
-                setSearchQueryInput(event.target.value);
-              }}
-              autoComplete="off"
-            />
-          </div>
-          <div className={tw("mt-2 mb-2")}>
-            Selected {currentlySelectedDocuments.length} documents
-          </div>
-          <Table
-            loading={isDataSourceDocumentsResponseLoading}
-            data={dataSourceDocumentsResponse?.response}
-            columns={[
-              <Tooltip
-                content={
-                  pageCheckboxChecked
-                    ? "Unselect all documents from current page"
-                    : "Select all documents from current page"
-                }
-                className={tw("normal-case")}
-              >
-                <Checkbox
-                  onChange={onPageCheckboxChange}
-                  checked={pageCheckboxChecked}
+                  <div>
+                    <h1 className={tw("text font-semibold mb-1")}>
+                      Could not get documents!
+                    </h1>
+                    <div className={tw("text-xs")}>
+                      Encountered an unexpected error while fetching documents from{" "}
+                      {readableName}. This could be due to {readableName} being
+                      temporarily unavailable.
+                    </div>
+                    <Button
+                      onClick={() => {
+                        mutateDataSourceDocumentsResponse();
+                      }}
+                      size="xs"
+                      className={tw("mt-1")}
+                    >
+                      Try again
+                    </Button>
+                  </div>
+                </Alert>
+              ) : null}
+              <div className={tw("mb-4")}>
+                <TextInput
+                  id="search"
+                  name="search"
+                  placeholder="Search documents"
+                  value={searchQueryInput}
+                  onChange={(event) => {
+                    setSearchQueryInput(event.target.value);
+                  }}
+                  autoComplete="off"
                 />
-              </Tooltip>,
-              "Document",
-              "Created Date",
-            ]}
-            renderCells={renderCells}
-            page={1}
-            totalPages={1}
-            onPageChange={onPageChange}
-          />
-        </div>
+              </div>
+              <div className={tw("mt-2 mb-2")}>
+                Selected {currentlySelectedDocuments.length} documents
+              </div>
+              <Table
+                loading={isDataSourceDocumentsResponseLoading}
+                data={dataSourceDocumentsResponse?.response}
+                columns={[
+                  <Tooltip
+                    content={
+                      pageCheckboxChecked
+                        ? "Unselect all documents from current page"
+                        : "Select all documents from current page"
+                    }
+                    className={tw("normal-case")}
+                  >
+                    <Checkbox
+                      onChange={onPageCheckboxChange}
+                      checked={pageCheckboxChecked}
+                    />
+                  </Tooltip>,
+                  "Document",
+                  "Created Date",
+                ]}
+                renderCells={renderCells}
+                page={1}
+                totalPages={1}
+                onPageChange={onPageChange}
+              />
+            </div>
+        }
       </Modal.Body>
       <Modal.Footer>
         <Button

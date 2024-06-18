@@ -136,6 +136,7 @@ const DataSourceCard = ({
 }) => {
   const [showModal, setShowModal] = useState(false);
   const { dataSource, connection } = dataSourceRecord;
+  const [hoa, setHoa] = useState("");
 
   if (dataSource === DataSource.UPLOAD) {
     return (
@@ -196,6 +197,8 @@ const DataSourceCard = ({
             dataSourceConnectionId={Id.from(connection.id)}
             selectedDocuments={selectedDocuments}
             show={showModal}
+            hoa={hoa}
+            setHoa={setHoa}
             onClose={() => setShowModal(false)}
             onDocumentsSelected={onDocumentsSelected}
           />
