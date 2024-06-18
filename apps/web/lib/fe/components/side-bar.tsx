@@ -7,9 +7,7 @@ import {
   HiChatAlt2,
   HiPlus,
   HiOutlineCog,
-  HiFolder,
 } from "react-icons/hi";
-import { RiNotionFill } from "react-icons/ri";
 import { tw } from "twind";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
@@ -78,14 +76,6 @@ export function Sidebar({
           >
             Document Collections
           </FlowbiteSidebar.Item> */}
-          <FlowbiteSidebar.Item
-            href="https://notion.so"
-            icon={RiNotionFill}
-            className={tw("mt-2")}
-            active={activeItem === "document-collections"}
-          >
-            Notion
-          </FlowbiteSidebar.Item>
         </FlowbiteSidebar.ItemGroup>
         <FlowbiteSidebar.ItemGroup
           className={tw("absolute bottom-0 mb-12 border-t-0")}
