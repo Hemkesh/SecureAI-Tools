@@ -101,7 +101,7 @@ export const DocumentsDataSourceSelector = ({
     <div className={tw("flex flex-wrap")}>
       {dataSourceRecords ? (
         dataSourceRecords.map((dsr) => {
-          return (
+          return dsr.dataSource != DataSource.UPLOAD ? (
             <DataSourceCard
               key={dsr.dataSource}
               dataSourceRecord={dsr}
@@ -109,7 +109,7 @@ export const DocumentsDataSourceSelector = ({
               selectedDocuments={selectedDocuments.get(dsr.dataSource) ?? []}
               onDocumentsSelected={onDocumentsSelected}
             />
-          );
+          ) : null;
         })
       ) : (
         <div className={tw("flex w-full flex-col items-center")}>
