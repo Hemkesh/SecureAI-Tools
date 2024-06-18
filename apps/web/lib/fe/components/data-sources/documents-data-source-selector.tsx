@@ -188,7 +188,7 @@ const DataSourceCard = ({
       <Tooltip tipContent={tooltTipText}>
         <div
           className={tw(
-            "items-center p-3 w-48 rounded-lg border border-gray-200 bg-white shadow-md m-2 cursor-pointer hover:bg-gray-50",
+            "items-center p-3 w-48 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50",
           )}
           onClick={() => {
             setShowModal(true);

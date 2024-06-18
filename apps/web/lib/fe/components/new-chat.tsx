@@ -206,12 +206,10 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
         ) : null}
         <div className={tw("flex flex-col grow items-center justify-center")}>
           <div className={tw("flex flex-col items-center")}>
-            <Image
-              className={tw(`h-20 w-20`)}
+            <img 
               src="/logo.png"
               alt="logo"
-              width={80}
-              height={80}
+              width={60}
             />
             <span className={tw("font-semibold text-xl mt-4")}>
               How can I help you today?

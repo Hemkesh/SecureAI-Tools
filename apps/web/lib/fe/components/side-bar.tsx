@@ -48,7 +48,7 @@ export function Sidebar({
           e.preventDefault();
         }}
       >
-        Village
+        <h1 style={{ fontSize: "1.5rem"}}>Village</h1>
       </FlowbiteSidebar.Logo>
       <FlowbiteSidebar.Items>
         <FlowbiteSidebar.ItemGroup>
