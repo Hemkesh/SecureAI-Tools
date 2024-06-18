@@ -154,55 +154,56 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
           <div className={tw("m-5")}>
             <ModelSetupAlert orgSlug={orgSlug} />
           </div>
-        ) : (
-          <div className={tw("flex flex-col items-center mt-1.5")}>
-            <div className={tw("rounded-lg border bg-gray-50 shadow-sm p-3")}>
-              {organizationResponse ? (
-                <Dropdown
-                  label={
-                    <div className={tw("text-sm font-light mr-1")}>
-                      {organizationResponse.response.defaultModel} (
-                      {modelTypeToReadableName(
-                        organizationResponse.response.defaultModelType,
-                      )}
-                      )
-                    </div>
-                  }
-                  inline
-                >
-                  <Dropdown.Item
-                    disabled={modelEditDisabled}
-                    href={
-                      modelEditDisabled
-                        ? undefined
-                        : `${FrontendRoutes.getOrgSettingsRoute(
-                            orgSlug,
-                          )}?tab=ai`
-                    }
-                    className={tw(
-                      modelEditDisabled ? "cursor-not-allowed" : "",
-                    )}
-                  >
-                    <Tooltip
-                      tipContent={
-                        modelEditDisabled
-                          ? "Ask your organization admin to change AI settings"
-                          : undefined
-                      }
-                    >
-                      <div className={tw("text-left")}>
-                        <div>Change AI model</div>
-                        <div className={tw("text-xs font-light")}>
-                          Use a different AI model by changing AI settings
-                        </div>
-                      </div>
-                    </Tooltip>
-                  </Dropdown.Item>
-                </Dropdown>
-              ) : null}
-            </div>
-          </div>
-        )}
+        // ) : (
+        //   <div className={tw("flex flex-col items-center mt-1.5")}>
+        //     <div className={tw("rounded-lg border bg-gray-50 shadow-sm p-3")}>
+        //       {organizationResponse ? (
+        //         <Dropdown
+        //           label={
+        //             <div className={tw("text-sm font-light mr-1")}>
+        //               {organizationResponse.response.defaultModel} (
+        //               {modelTypeToReadableName(
+        //                 organizationResponse.response.defaultModelType,
+        //               )}
+        //               )
+        //             </div>
+        //           }
+        //           inline
+        //         >
+        //           <Dropdown.Item
+        //             disabled={modelEditDisabled}
+        //             href={
+        //               modelEditDisabled
+        //                 ? undefined
+        //                 : `${FrontendRoutes.getOrgSettingsRoute(
+        //                     orgSlug,
+        //                   )}?tab=ai`
+        //             }
+        //             className={tw(
+        //               modelEditDisabled ? "cursor-not-allowed" : "",
+        //             )}
+        //           >
+        //             <Tooltip
+        //               tipContent={
+        //                 modelEditDisabled
+        //                   ? "Ask your organization admin to change AI settings"
+        //                   : undefined
+        //               }
+        //             >
+        //               <div className={tw("text-left")}>
+        //                 <div>Change AI model</div>
+        //                 <div className={tw("text-xs font-light")}>
+        //                   Use a different AI model by changing AI settings
+        //                 </div>
+        //               </div>
+        //             </Tooltip>
+        //           </Dropdown.Item>
+        //         </Dropdown>
+        //       ) : null}
+        //     </div>
+        //   </div>
+        // )}
+        ) : null}
         <div className={tw("flex flex-col grow items-center justify-center")}>
           <div className={tw("flex flex-col items-center")}>
             <Image
