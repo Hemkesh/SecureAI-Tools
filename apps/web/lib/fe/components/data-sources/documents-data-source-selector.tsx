@@ -28,6 +28,7 @@ import {
   dataSourceToReadableName,
   toMimeType,
 } from "@repo/core";
+import { SearchDropdownItem } from "../search-dropdown";
 
 export const DocumentsDataSourceSelector = ({
   orgSlug,
@@ -137,6 +138,20 @@ const DataSourceCard = ({
   const [showModal, setShowModal] = useState(false);
   const { dataSource, connection } = dataSourceRecord;
   const [hoa, setHoa] = useState("");
+  const [allHOAs, setAllHOAs] = useState<SearchDropdownItem[]>([
+    {
+      label: "Amhurst",
+      id: "1",
+    },
+    {
+      label: "CreekHaven",
+      id: "2",
+    },
+    {
+      label: "Woodmont",
+      id: "3",
+    },
+  ]);
 
   if (dataSource === DataSource.UPLOAD) {
     return (
@@ -166,6 +181,8 @@ const DataSourceCard = ({
     ? `Select documents from ${readableName}`
     : `Connect to ${readableName} first to select documents`;
 
+  const getHOAName = () => hoa ? allHOAs.find((h) => h.id == hoa)?.label : "Select HOA";
+
   return (
     <div>
       <Tooltip tipContent={tooltTipText}>
@@ -180,7 +197,7 @@ const DataSourceCard = ({
           <div className={tw("flex flex-row items-center")}>
             <DataSourceIcon dataSource={dataSource} />
             <div className={tw("text-base font-normal ml-2")}>
-              {readableName}
+              {dataSource === DataSource.PAPERLESS_NGX ? getHOAName() : readableName}
               <div className={tw("text-xs font-light")}>
                 {selectedDocuments.length > 0
                   ? `${selectedDocuments.length} documents selected`
@@ -199,6 +216,7 @@ const DataSourceCard = ({
             show={showModal}
             hoa={hoa}
             setHoa={setHoa}
+            items={allHOAs}
             onClose={() => setShowModal(false)}
             onDocumentsSelected={onDocumentsSelected}
           />

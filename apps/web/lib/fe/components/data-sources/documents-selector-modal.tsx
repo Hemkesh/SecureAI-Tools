@@ -27,7 +27,7 @@ import {
   PAGINATION_STARTING_PAGE_NUMBER,
   dataSourceToReadableName,
 } from "@repo/core";
-import { SearchDropdown } from "../search-dropdown";
+import { SearchDropdown, SearchDropdownItem } from "../search-dropdown";
 
 export const DocumentsSelectorModal = ({
   dataSource,
@@ -35,6 +35,7 @@ export const DocumentsSelectorModal = ({
   selectedDocuments,
   show,
   hoa,
+  items,
   setHoa,
   onDocumentsSelected,
   onClose,
@@ -44,6 +45,7 @@ export const DocumentsSelectorModal = ({
   selectedDocuments: SelectedDocument[];
   show: boolean;
   hoa: string;
+  items: SearchDropdownItem[];
   setHoa: (hoa: string) => void;
   onDocumentsSelected: (
     dataSource: DataSource,
@@ -198,25 +200,13 @@ export const DocumentsSelectorModal = ({
     >
       <Modal.Header>
         <SearchDropdown
-          items={[
-            {
-              label: "Amhurst",
-              id: "1",
-            },
-            {
-              label: "CreekHaven",
-              id: "2",
-            },
-            {
-              label: "Woodmont",
-              id: "3",
-            },
-          ]}
+          items={items}
           label="Select HOA"
           initialValue={selectedHOA}
           onChange={(item) => {
             setSelectedHOA(item.id);
             setHoa(item.id);
+            setCurrentlySelectedDocuments([]);
           }}
         />
       </Modal.Header>

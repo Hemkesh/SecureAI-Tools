@@ -1,16 +1,16 @@
 import { Dropdown } from "flowbite-react";
 import { useState } from "react";
 
-type Item = {
+export type SearchDropdownItem = {
   label: string;
   id: string;
 };
 
 type SearchDropdownProps = {
-  items: Item[];
+  items: SearchDropdownItem[];
   label: string;
   initialValue?: string;
-  onChange: (item: Item) => void;
+  onChange: (item: SearchDropdownItem) => void;
 };
 
 export function SearchDropdown({ items, label, initialValue, onChange }: SearchDropdownProps) {
