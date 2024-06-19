@@ -7,6 +7,7 @@ import {
   HiChatAlt2,
   HiPlus,
   HiOutlineCog,
+  HiFolder,
 } from "react-icons/hi";
 import { tw } from "twind";
 import { useState } from "react";
@@ -68,14 +69,14 @@ export function Sidebar({
           >
             Chat History
           </FlowbiteSidebar.Item>
-          {/* <FlowbiteSidebar.Item
-            href={FrontendRoutes.getDocumentCollectionsRoute(orgSlug)}
+          <FlowbiteSidebar.Item
+            href={FrontendRoutes.getDocumentsListRoute(orgSlug)}
             icon={HiFolder}
             className={tw("mt-2")}
             active={activeItem === "document-collections"}
           >
-            Document Collections
-          </FlowbiteSidebar.Item> */}
+            HOA Documents
+          </FlowbiteSidebar.Item>
         </FlowbiteSidebar.ItemGroup>
         <FlowbiteSidebar.ItemGroup
           className={tw("absolute bottom-0 mb-12 border-t-0")}
