@@ -1,13 +1,13 @@
 import { Metadata } from "next";
 
-import { DocsList } from "lib/fe/components/docs-list";
+import DocumentsListPage from "./documents-list-page";
 
 export const metadata: Metadata = {
-  title: "Documents List",
+  title: "HOA Documents",
 };
 
 const Page = ({ params }: { params: { orgSlug: string } }) => {
-  return <DocsList  orgSlug={params.orgSlug}/>;
+  return <DocumentsListPage  orgSlug={params.orgSlug}/>;
 };
 
 export default Page;

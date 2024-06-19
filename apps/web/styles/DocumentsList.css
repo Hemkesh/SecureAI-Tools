@@ -1,0 +1,14 @@
+.TreeNode {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.docs-list {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #d7d7d7;
+  margin-top: 2rem;
+}
