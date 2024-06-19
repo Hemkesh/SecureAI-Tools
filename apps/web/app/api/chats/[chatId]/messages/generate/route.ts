@@ -111,6 +111,21 @@ async function generateChatWithAI(
   return new StreamingTextResponse(stream);
 }
 
+function findDynamicScores(citations: [LangchainDocument<Record<string, any>>, number][]) {
+  const threshold = parseFloat(process.env.DYNAMIC_SCORE_THRESHOLD || "0.3");
+
+  // Sort neighbors by score in ascending order
+  citations.sort((a, b) => {
+    return a[1] - b[1];
+  });
+
+  // Find the best score
+  const bestScore = citations[0] ? citations[0][1] : 0;
+
+  // Include all neighbors within the threshold range
+  return citations.filter(neighbor => neighbor[1] - bestScore <= threshold);
+}
+
 async function generateChatWithDocs(
   chat: Chat,
   chatMessagesRequest: ChatMessagesRequest,
@@ -156,10 +171,10 @@ async function generateChatWithDocs(
         )
       : query.content;
 
-  const sourcesWithScores = await vectorDb.similaritySearchWithScore(
+  const sourcesWithScores = findDynamicScores(await vectorDb.similaritySearchWithScore(
     rewrittenQuestion,
-    process.env.DOCS_RETRIEVAL_K ? parseInt(process.env.DOCS_RETRIEVAL_K) : 4,
-  );
+    process.env.DOCS_RETRIEVAL_K ? parseInt(process.env.DOCS_RETRIEVAL_K) : 4
+  ));
 
   logger.debug("sources: ", { sources: sourcesWithScores });
 
