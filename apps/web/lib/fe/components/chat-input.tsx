@@ -1,3 +1,4 @@
+import { defaultPrePrompt } from "lib/types/api/default-pre-prompt";
 import { ChangeEvent } from "react";
 import { tw } from "twind";
 
@@ -16,6 +17,7 @@ export default function ChatInput({
   disabled?: boolean | undefined;
   onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 }) {
+  const prePrompt = process.env.PRE_PROMPT ?? defaultPrePrompt;
   return (
     <div
       className={tw(
@@ -27,11 +29,9 @@ export default function ChatInput({
           "m-0 w-full resize-none border-0 bg-transparent py-[10px] pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:py-4 md:pr-12 pl-3 md:pl-4",
           disabled ? "cursor-not-allowed" : "",
         )}
-        value={value.startsWith(process.env.PRE_PROMPT ?? "") ? value.slice(process.env.PRE_PROMPT?.length ?? 0) : value}
+        value={value.startsWith(prePrompt) ? value.slice(prePrompt.length) : value}
         placeholder={placeholder}
         onChange={(e) => {
-          const prePrompt = process.env.PRE_PROMPT;
-
           if (prePrompt) {            
             e.target.value = `${prePrompt}${e.target.value}`;
           }

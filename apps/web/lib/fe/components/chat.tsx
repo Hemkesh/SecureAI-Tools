@@ -40,6 +40,7 @@ import {
   isEmpty,
   IdType,
 } from "@repo/core";
+import { defaultPrePrompt } from "lib/types/api/default-pre-prompt";
 
 export interface DocumentsWithIndexingStatus extends DocumentResponse {
   indexingStatus: DocumentIndexingStatus;
@@ -57,7 +58,7 @@ const MessageEntry = ({
   onJumpToPage?: (docId: string, pageIndex: number) => void;
 }) => {
   const [copiedToClipboard, setCopiedToClipboard] = useState<boolean>(false);
-
+  const prePrompt = process.env.PRE_PROMPT ?? defaultPrePrompt;
   return (
     <div
       key={message.id}
@@ -85,8 +86,8 @@ const MessageEntry = ({
                 "relative flex gap-1 md:gap-3 lg:w-[calc(100%-115px)] whitespace-pre-wrap",
               )}
             >
-              {message.content.startsWith(process.env.PRE_PROMPT ?? "") ? (
-                message.content.slice(process.env.PRE_PROMPT?.length ?? 0)
+              {message.content.startsWith(prePrompt) ? (
+                message.content.slice(prePrompt.length)
               ) : (
                 message.content
               )}
