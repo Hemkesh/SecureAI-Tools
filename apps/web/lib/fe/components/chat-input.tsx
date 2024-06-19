@@ -27,9 +27,19 @@ export default function ChatInput({
           "m-0 w-full resize-none border-0 bg-transparent py-[10px] pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:py-4 md:pr-12 pl-3 md:pl-4",
           disabled ? "cursor-not-allowed" : "",
         )}
-        value={value}
+        value={value.startsWith(process.env.PRE_PROMPT ?? "") ? value.slice(process.env.PRE_PROMPT?.length ?? 0) : value}
         placeholder={placeholder}
-        onChange={onChange}
+        onChange={(e) => {
+          const prePrompt = process.env.PRE_PROMPT;
+
+          if (prePrompt) {            
+            e.target.value = `${prePrompt}${e.target.value}`;
+          }
+
+          if (onChange) {
+            onChange(e);
+          }
+        }}
         disabled={disabled}
         onKeyUp={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {

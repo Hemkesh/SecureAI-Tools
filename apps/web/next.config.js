@@ -1,6 +1,7 @@
 // TODO: Keep these in sync with routes in web/lib/fe/routes.ts
 const LOG_IN = "/log-in";
 const LOG_OUT = "/log-out";
+const webpack = require('webpack'); // eslint-disable-line
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -16,6 +17,12 @@ const nextConfig = {
 
     // https://github.com/wojtekmaj/react-pdf/issues/799#issuecomment-864887752
     config.resolve.alias.canvas = false;
+
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        "process.env.PRE_PROMPT": JSON.stringify(process.env.PRE_PROMPT),
+      })
+    );
 
     return config;
   },

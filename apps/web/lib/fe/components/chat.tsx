@@ -85,7 +85,11 @@ const MessageEntry = ({
                 "relative flex gap-1 md:gap-3 lg:w-[calc(100%-115px)] whitespace-pre-wrap",
               )}
             >
-              {message.content}
+              {message.content.startsWith(process.env.PRE_PROMPT ?? "") ? (
+                message.content.slice(process.env.PRE_PROMPT?.length ?? 0)
+              ) : (
+                message.content
+              )}
             </div>
             {citations && citations.length > 0 ? (
               <div className={tw("mt-4 border-t")}>
