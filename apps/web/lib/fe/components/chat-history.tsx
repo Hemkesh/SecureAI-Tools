@@ -178,7 +178,7 @@ export default function ChatHistory({ orgSlug }: { orgSlug: string }) {
               <PageTitle>Chat History</PageTitle>
             </div>
             <div className={tw("float-right")}>
-              <Button pill href={FrontendRoutes.getOrgHomeRoute(orgSlug)}>
+              <Button pill href={FrontendRoutes.getOrgHomeRoute(orgSlug)} style={{ backgroundColor: "#6366f1" }}>
                 New Chat
               </Button>
             </div>
