@@ -97,7 +97,7 @@ const MessageEntry = ({
                   <span className={tw("font-semibold")}>Sources:</span>
                   <ul className={tw("ml-2 mt-3 list-disc")}>
                     {citations
-                      .sort((a, b) => b.score - a.score)
+                      .sort((a, b) => a.score - b.score)
                       .map((c) => {
                         const doc = documents?.find(
                           (d) => d.id === c.documentId,
