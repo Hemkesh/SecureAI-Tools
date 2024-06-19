@@ -56,3 +56,9 @@ dev-data
 .turbo
 
 dist/
+
+deployment/db
+deployment/inference
+deployment/message-broker
+deployment/vector-db
+deployment/web
