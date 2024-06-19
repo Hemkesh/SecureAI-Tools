@@ -6,6 +6,8 @@ import { Button, Progress, Spinner, Tooltip } from "flowbite-react";
 import { HiOutlineClipboard, HiOutlineClipboardCheck } from "react-icons/hi";
 import clipboardCopy from "clipboard-copy";
 import { MdSend } from "react-icons/md";
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 import ChatInput from "lib/fe/components/chat-input";
 import { ChatResponse } from "lib/types/api/chat.response";
@@ -83,14 +85,16 @@ const MessageEntry = ({
           <div className={tw("flex flex-col w-[calc(100%-50px)]")}>
             <div
               className={tw(
-                "relative flex gap-1 md:gap-3 lg:w-[calc(100%-115px)] whitespace-pre-wrap",
+                "relative md:gap-3 lg:w-[calc(100%-115px)] whitespace-pre-wrap",
               )}
             >
-              {message.content.startsWith(prePrompt) ? (
-                message.content.slice(prePrompt.length)
-              ) : (
-                message.content
-              )}
+              <Markdown remarkPlugins={[remarkGfm]}>
+                {message.content.startsWith(prePrompt) ? (
+                  message.content.slice(prePrompt.length)
+                ) : (
+                  message.content
+                )}
+              </Markdown>
             </div>
             {citations && citations.length > 0 ? (
               <div className={tw("mt-4 border-t")}>
