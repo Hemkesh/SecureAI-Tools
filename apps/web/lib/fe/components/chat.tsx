@@ -464,11 +464,12 @@ export function Chat({
               type="submit"
               disabled={isEmpty(input) || isLoading}
               className={tw("ml-2")}
+              style={{ backgroundColor: "transparent" }}
             >
               {isLoading ? (
                 <Spinner aria-label="generating response..." />
               ) : (
-                <MdSend className={tw("h-6 w-6")} />
+                <MdSend className={tw("h-6 w-6")} style={{ color: "#6366F1" }}/>
               )}
             </Button>
           </div>

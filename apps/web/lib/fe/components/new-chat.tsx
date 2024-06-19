@@ -114,8 +114,8 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
     useSWR(
       shouldFetchOrgMembership
         ? getOrgMembershipsApiPath(Id.from(organizationResponse.response.id), {
-            userId: (session!.user as TokenUser).id,
-          })
+          userId: (session!.user as TokenUser).id,
+        })
         : null,
       createFetcher<OrgMembershipResponse[]>(),
     );
@@ -128,9 +128,9 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
   const { data: modelsResponse, error: fetchModelsError } = useSWR(
     shouldFetchModels
       ? organizationsIdOrSlugModelsApiPath(
-          orgSlug,
-          organizationResponse.response.defaultModel,
-        )
+        orgSlug,
+        organizationResponse.response.defaultModel,
+      )
       : null,
     createFetcher<ModelsResponse>(),
   );
@@ -154,59 +154,59 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
           <div className={tw("m-5")}>
             <ModelSetupAlert orgSlug={orgSlug} />
           </div>
-        // ) : (
-        //   <div className={tw("flex flex-col items-center mt-1.5")}>
-        //     <div className={tw("rounded-lg border bg-gray-50 shadow-sm p-3")}>
-        //       {organizationResponse ? (
-        //         <Dropdown
-        //           label={
-        //             <div className={tw("text-sm font-light mr-1")}>
-        //               {organizationResponse.response.defaultModel} (
-        //               {modelTypeToReadableName(
-        //                 organizationResponse.response.defaultModelType,
-        //               )}
-        //               )
-        //             </div>
-        //           }
-        //           inline
-        //         >
-        //           <Dropdown.Item
-        //             disabled={modelEditDisabled}
-        //             href={
-        //               modelEditDisabled
-        //                 ? undefined
-        //                 : `${FrontendRoutes.getOrgSettingsRoute(
-        //                     orgSlug,
-        //                   )}?tab=ai`
-        //             }
-        //             className={tw(
-        //               modelEditDisabled ? "cursor-not-allowed" : "",
-        //             )}
-        //           >
-        //             <Tooltip
-        //               tipContent={
-        //                 modelEditDisabled
-        //                   ? "Ask your organization admin to change AI settings"
-        //                   : undefined
-        //               }
-        //             >
-        //               <div className={tw("text-left")}>
-        //                 <div>Change AI model</div>
-        //                 <div className={tw("text-xs font-light")}>
-        //                   Use a different AI model by changing AI settings
-        //                 </div>
-        //               </div>
-        //             </Tooltip>
-        //           </Dropdown.Item>
-        //         </Dropdown>
-        //       ) : null}
-        //     </div>
-        //   </div>
-        // )}
+          // ) : (
+          //   <div className={tw("flex flex-col items-center mt-1.5")}>
+          //     <div className={tw("rounded-lg border bg-gray-50 shadow-sm p-3")}>
+          //       {organizationResponse ? (
+          //         <Dropdown
+          //           label={
+          //             <div className={tw("text-sm font-light mr-1")}>
+          //               {organizationResponse.response.defaultModel} (
+          //               {modelTypeToReadableName(
+          //                 organizationResponse.response.defaultModelType,
+          //               )}
+          //               )
+          //             </div>
+          //           }
+          //           inline
+          //         >
+          //           <Dropdown.Item
+          //             disabled={modelEditDisabled}
+          //             href={
+          //               modelEditDisabled
+          //                 ? undefined
+          //                 : `${FrontendRoutes.getOrgSettingsRoute(
+          //                     orgSlug,
+          //                   )}?tab=ai`
+          //             }
+          //             className={tw(
+          //               modelEditDisabled ? "cursor-not-allowed" : "",
+          //             )}
+          //           >
+          //             <Tooltip
+          //               tipContent={
+          //                 modelEditDisabled
+          //                   ? "Ask your organization admin to change AI settings"
+          //                   : undefined
+          //               }
+          //             >
+          //               <div className={tw("text-left")}>
+          //                 <div>Change AI model</div>
+          //                 <div className={tw("text-xs font-light")}>
+          //                   Use a different AI model by changing AI settings
+          //                 </div>
+          //               </div>
+          //             </Tooltip>
+          //           </Dropdown.Item>
+          //         </Dropdown>
+          //       ) : null}
+          //     </div>
+          //   </div>
+          // )}
         ) : null}
         <div className={tw("flex flex-col grow items-center justify-center")}>
           <div className={tw("flex flex-col items-center")}>
-            <img 
+            <img
               src="/logo.png"
               alt="logo"
               width={60}
@@ -233,17 +233,8 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
           >
             <div className={tw("relative flex h-full flex-1 items-stretch")}>
               <div className={tw("flex flex-col w-full items-center")}>
-                <ChatInput
-                  value={input}
-                  onChange={(e) => {
-                    setInput(e.target.value);
-                  }}
-                  onEnter={handleSubmit}
-                  disabled={modelSetupRequired || isSubmitting}
-                  placeholder="Type something and hit Enter to start a new chat. Optionally attach documents to chat with them..."
-                  rows={2}
-                />
-                <div className={tw("mt-2 w-full")}>
+
+                <div className={tw("mt-2 w-full flex flex-row justify-between gap-3")} style={{ alignItems: "stretch" }}>
                   <DocumentsDataSourceSelector
                     orgSlug={orgSlug}
                     selectedDocuments={selectedDocuments}
@@ -255,12 +246,24 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
                       );
                     }}
                   />
+                  <ChatInput
+                    value={input}
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                    }}
+                    onEnter={handleSubmit}
+                    disabled={modelSetupRequired || isSubmitting}
+                    placeholder="Select documents and ask a question"
+                    rows={1}
+                  />
                 </div>
+
                 <Button
                   type="submit"
                   className={tw("mt-4 w-full")}
                   isProcessing={isSubmitting}
                   disabled={modelSetupRequired || isEmpty(input)}
+                  style={{ backgroundColor: "#6366F1" }}
                 >
                   Submit
                 </Button>

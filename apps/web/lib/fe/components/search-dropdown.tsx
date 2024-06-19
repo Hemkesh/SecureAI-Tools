@@ -31,7 +31,7 @@ export function SearchDropdown({ items, label, initialValue, onChange }: SearchD
       <Dropdown
         dismissOnClick={true}
         label={dropdownText}
-        style={{ flexShrink: 0 }}
+        style={{ backgroundColor: "#6366F1", flexShrink: 0 }}
       >
         <input
           type="text"

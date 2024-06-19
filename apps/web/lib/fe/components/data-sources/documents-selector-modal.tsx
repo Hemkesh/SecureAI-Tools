@@ -141,6 +141,7 @@ export const DocumentsSelectorModal = ({
             }
           }}
           checked={selectedExternalIds.has(item.externalId)}
+          color="#6366F1"
         />
       </div>,
       <div>{item.name}</div>,
@@ -273,6 +274,7 @@ export const DocumentsSelectorModal = ({
                     <Checkbox
                       onChange={onPageCheckboxChange}
                       checked={pageCheckboxChecked}
+                      color="#6366F1"
                     />
                   </Tooltip>,
                   "Document",
@@ -292,10 +294,11 @@ export const DocumentsSelectorModal = ({
             onDocumentsSelected(dataSource, currentlySelectedDocuments);
             onClose();
           }}
+          style={{ backgroundColor: "#6366F1" }}
         >
           Continue
         </Button>
-        <Button onClick={onClose} outline>
+        <Button onClick={onClose} outline color="#6366F1">
           Cancel
         </Button>
       </Modal.Footer>
