@@ -93,7 +93,6 @@ export function DocumentsListPage({ orgSlug }: { orgSlug: string }) {
                   < DocsList
                     key={dsr.dataSource}
                     dataSourceRecord={dsr}
-                    orgSlug={orgSlug}
                   />
                 ) : null;
               })
