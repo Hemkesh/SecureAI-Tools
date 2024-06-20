@@ -292,6 +292,12 @@ export const DocumentsSelectorModal = ({
         <Button
           onClick={() => {
             onDocumentsSelected(dataSource, currentlySelectedDocuments);
+            // make an event called "selected-documents" on document
+            document.dispatchEvent(
+              new CustomEvent("selected-documents", {
+                detail: currentlySelectedDocuments,
+              }),
+            )
             onClose();
           }}
           style={{ backgroundColor: "#6366F1" }}

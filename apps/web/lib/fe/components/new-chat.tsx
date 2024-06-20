@@ -75,6 +75,20 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
           ? ChatType.CHAT_WITH_LLM
           : ChatType.CHAT_WITH_DOCS;
 
+      if (chatType === ChatType.CHAT_WITH_LLM) {
+        setIsSubmitting(false);
+        addToast({
+          type: "failure",
+          children: <p>Please select at least one document to chat.</p>,
+        });
+        document.getElementById("select-documents-box")?.click();
+        // listen to selected-documents event and call handle submit
+        document.addEventListener("selected-documents", () => {
+          handleSubmit();
+        })
+        return;
+      }
+
       let documentCollectionId: Id<IdType.DocumentCollection> | undefined =
         undefined;
       if (chatType === ChatType.CHAT_WITH_DOCS) {
@@ -224,7 +238,7 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
             </span>
             <div className="prompt-section">
               {PROMPTS.map((prompt) => (
-                <div className="prompt-box" onClick={() => { 
+                <div className="prompt-box" onClick={() => {
                   setInput(prompt);
                 }}>
                   {prompt}
@@ -262,6 +276,7 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
                         ),
                       );
                     }}
+
                   />
                   <ChatInput
                     value={input}
@@ -279,7 +294,7 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
                   type="submit"
                   className={tw("mt-4 w-full")}
                   isProcessing={isSubmitting}
-                  disabled={modelSetupRequired || isEmpty(input) || selectedDocuments.size === 0}
+                  disabled={modelSetupRequired || isEmpty(input)}
                   style={{ backgroundColor: "#6366F1" }}
                 >
                   Submit
