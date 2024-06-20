@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { tw } from "twind";
-import Image from "next/image";
 import { Button, Dropdown } from "flowbite-react";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
@@ -30,6 +29,7 @@ import { isAdmin } from "lib/fe/permission-utils";
 import { ModelsResponse } from "lib/types/api/models.response";
 import { ModelSetupAlert } from "lib/fe/components/model-setup-alert";
 import { Tooltip } from "lib/fe/components/tooltip";
+import "styles/NewChat.css";
 
 import {
   Id,
@@ -37,13 +37,20 @@ import {
   OrganizationResponse,
   ModelType,
   isEmpty,
-  modelTypeToReadableName,
   OrgMembershipResponse,
   DataSource,
   IdType,
 } from "@repo/core";
 import { DocumentsDataSourceSelector } from "./data-sources/documents-data-source-selector";
 import { SelectedDocument } from "../types/selected-document";
+import { defaultPrePrompt } from "lib/types/api/default-pre-prompt";
+
+const PROMPTS = [
+  'Can I paint my doors red in my house?',
+  'What pets are allowed and what pet rules exist?',
+  'What are the procedures for running for the HOA Board?',
+  'How do I reserve common amenities like pools, parks, or clubhouses for an event?',
+];
 
 export default function NewChat({ orgSlug }: { orgSlug: string }) {
   const router = useRouter();
@@ -81,10 +88,11 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
         documentCollectionId: documentCollectionId?.toString(),
       });
       const chatId = Id.from(chatResponse.id);
+      const prePrompt = process.env.PRE_PROMPT ?? defaultPrePrompt;
 
       const chatMessageResponse = await postChatMessage(chatId, {
         message: {
-          content: input,
+          content: input.startsWith(prePrompt) ? input : `${prePrompt}${input}`,
           role: "user",
         },
       });
@@ -214,6 +222,15 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
             <span className={tw("font-semibold text-xl mt-4")}>
               How can I help you today?
             </span>
+            <div className="prompt-section">
+              {PROMPTS.map((prompt) => (
+                <div className="prompt-box" onClick={() => { 
+                  setInput(prompt);
+                }}>
+                  {prompt}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div
@@ -262,7 +279,7 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
                   type="submit"
                   className={tw("mt-4 w-full")}
                   isProcessing={isSubmitting}
-                  disabled={modelSetupRequired || isEmpty(input)}
+                  disabled={modelSetupRequired || isEmpty(input) || selectedDocuments.size === 0}
                   style={{ backgroundColor: "#6366F1" }}
                 >
                   Submit

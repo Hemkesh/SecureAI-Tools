@@ -1,0 +1,30 @@
+.prompt-section {
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  row-gap: 0.5rem;
+}
+
+@media (max-width: 1200px) {
+  .prompt-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.prompt-box {
+  background: #f9fafb;
+  border: 1px solid #e3e3e4;
+  color: #414346;
+  border-radius: 8px;
+  max-width: 12rem;
+  padding: 1rem 1.5rem 3rem 1.5rem;
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.prompt-box:hover {
+  background: #e3e3e4;
+}
