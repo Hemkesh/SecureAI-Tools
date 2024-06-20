@@ -178,7 +178,7 @@ const DataSourceCard = ({
   const readableName = dataSourceToReadableName(dataSource);
 
   const tooltTipText = connection
-    ? `Select documents from ${readableName}`
+    ? `Select documents for your HOA`
     : `Connect to ${readableName} first to select documents`;
 
   const getHOAName = () => hoa ? allHOAs.find((h) => h.id == hoa)?.label : "Select HOA";
@@ -190,6 +190,7 @@ const DataSourceCard = ({
           className={tw(
             "items-center p-3 w-48 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50",
           )}
+          id="select-documents-box"
           onClick={() => {
             setShowModal(true);
           }}
