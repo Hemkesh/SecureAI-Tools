@@ -1,0 +1,55 @@
+.TreeNode {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.docs-list {
+  border-radius: 8px;
+  border: 1px solid #d7d7d7;
+  margin-top: 2rem;
+}
+
+.doc-viewer {
+  background-color: white;
+  border-radius: 8px;
+  padding: 0rem 1rem;
+  margin-top: 2rem;
+}
+
+/* Make every div under .rpv-toolbar flex */
+.rpv-toolbar {
+  display: flex;
+}
+
+.rpv-toolbar div {
+  display: flex;
+}
+
+.rpv-toolbar__left {
+  display: none !important;
+}
+
+.rpv-toolbar__right>div:nth-child(1),
+.rpv-toolbar__right>div:nth-child(3),
+.rpv-toolbar__right>div:nth-child(6) {
+  display: none !important;
+}
+
+.rpv-default-layout__toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100000;
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.p-treenode-children {
+  margin-left: 1.5rem!important;
+}
+
+.p-tree-filter {
+  border-radius: 8px;
+  border: 1px solid #d7d7d7;
+}

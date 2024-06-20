@@ -2,6 +2,7 @@ import {
   DataSourceConnectionDocumentResponse,
   removeTrailingSlash,
   MimeType,
+  DataSourceConnectionDocumentLink,
 } from "@repo/core";
 
 import {
@@ -60,6 +61,20 @@ export class PaperlessNgxClient {
     });
 
     return await toClientResponse<DocumentResult>(resp);
+  }
+
+  async getLinks(
+    id: number | string,
+  ): Promise<ClientResponse<DataSourceConnectionDocumentLink[]>> {
+    const url = new URL(`${this.baseUrl}/api/documents/${id}/share_links/`);
+
+    const resp = await fetch(url, {
+      headers: {
+        Authorization: `Token ${this.authToken}`,
+      },
+    });
+
+    return await toClientResponse<DataSourceConnectionDocumentLink[]>(resp);
   }
 
   async downloadDocument(id: number | string): Promise<ClientResponse<Blob>> {

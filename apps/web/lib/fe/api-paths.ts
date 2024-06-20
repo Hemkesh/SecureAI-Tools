@@ -290,6 +290,16 @@ export const getDataSourceConnetionDocumentsApiPath = ({
   )}&page=${pagination.page}&pageSize=${pagination.pageSize}`;
 };
 
+export const getDataSourceConnetionLinkApiPath = ({
+  connectionId,
+  documentId,
+}: {
+  connectionId: Id<IdType.DataSourceConnection>;
+  documentId: string;
+}): string => {
+  return `/api/data-source-connections/${connectionId}/links?documentId=${documentId}`;
+};
+
 export const getDataSourceAuthorizeUrlApiPath = (
   dataSource: DataSource,
   redirectUri: string,
