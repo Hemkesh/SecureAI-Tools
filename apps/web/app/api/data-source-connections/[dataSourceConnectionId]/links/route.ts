@@ -107,12 +107,15 @@ async function getLinksFromPaperlessNgx(
 
   return NextResponse.json(
     documentsSearchResponse.data?.map((link) => {
+      const baseUrl = new URL(dataSourceConnection.baseUrl!);
+      baseUrl.pathname = baseUrl.pathname.replace(/\/$/, '');
+
       const newLink: DataSourceConnectionDocumentLink = {
         id: link.id,
         created: link.created,
         expiration: link.expiration,
         slug: process.env.NODE_ENV === "production"
-          ? `${dataSourceConnection.baseUrl}/share/${link.slug}`
+          ? `${baseUrl.href}share/${link.slug}`
           : `${new URL(dataSourceConnection.baseUrl!).protocol}//localhost:${new URL(dataSourceConnection.baseUrl!).port}/share/${link.slug}`,
       }
 
