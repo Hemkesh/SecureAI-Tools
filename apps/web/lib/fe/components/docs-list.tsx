@@ -181,6 +181,29 @@ export const FolderViewer = ({
               setSelectedNodeKey(clickedId);
             }
           }}
+          onNodeClick={(e) => {
+            let tempNodes = [...nodes];
+            // find the node that was cliekd and change its expanded state
+            
+            // step one, decode the key to get the path
+            const key = e.node.key!.toString();
+            const path = key.split('-');
+            const pathLength = path.length;
+            let currNode = null;
+            for (let i = 0; i < pathLength; i++) {
+              if (i === 0) {
+                currNode = nodes[parseInt(path[i]!)];
+              } else if (i !== 0 && currNode) {
+                currNode = currNode?.children?.[parseInt(path[i]!)];
+              }
+            }
+
+            if (currNode) {
+              currNode.expanded = !currNode.expanded;
+            }
+
+            setNodes(tempNodes);
+          }}
           filter
           filterMode="lenient"
           filterPlaceholder="Search"
