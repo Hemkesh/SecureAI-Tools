@@ -126,7 +126,7 @@ export const ChatTitle = ({
               </div>
             )}
             <div className={tw("text-xs font-normal mt-1 ml-0.5")}>
-              {model} ({modelTypeToReadableName(modelType)})
+              Powered by <b style={{ color: "#6366F1" }}>Village AI 1.0.0</b>
             </div>
           </div>
         </div>
