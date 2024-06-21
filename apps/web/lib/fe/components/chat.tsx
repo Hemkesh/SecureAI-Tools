@@ -483,6 +483,9 @@ export function Chat({
             </Button>
           </div>
         </form>
+        <div className={tw("flex justify-center p-2")}>
+          <p className={tw("text-xs text-gray-500 dark:text-gray-400")}>ⓘ VillageAI can make mistakes. Check sources of the responses.</p>
+        </div>
       </div>
     </div>
   );
