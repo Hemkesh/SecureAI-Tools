@@ -18,6 +18,7 @@ export * from "./types/data-source";
 export * from "./types/data-source-connection.response";
 export * from "./types/data-source-connection-document.response";
 export * from "./types/data-source-connection-document-link.response";
+export * from "./types/data-source-connection-types.response";
 export * from "./types/document-to-collection.response";
 export * from "./types/org-membership.response";
 export * from "./types/org-membership-role";

@@ -10,7 +10,7 @@ import {
   DataSourceRecord,
   getDataSourceRecords,
 } from "lib/fe/data-source-utils";
-import { getDataSourcesApiPath, getOrganizationsIdOrSlugDataSourceConnectionsApiPath } from "lib/fe/api-paths";
+import { getDataSourceConnetionHOAListApiPath, getDataSourcesApiPath, getOrganizationsIdOrSlugDataSourceConnectionsApiPath } from "lib/fe/api-paths";
 import { TokenUser } from "lib/types/core/token-user";
 import { createFetcher } from "lib/fe/api";
 import { DataSourceIcon } from "lib/fe/components/data-sources/data-source-icon";
@@ -23,6 +23,7 @@ import { DataSourcesResponse } from "lib/types/api/data-sources.response";
 import {
   DataSource,
   DataSourceConnectionResponse,
+  DataSourceConnectionTypes,
   Id,
   PAGINATION_STARTING_PAGE_NUMBER,
   dataSourceToReadableName,
@@ -138,20 +139,19 @@ const DataSourceCard = ({
   const [showModal, setShowModal] = useState(false);
   const { dataSource, connection } = dataSourceRecord;
   const [hoa, setHoa] = useState("");
-  const [allHOAs, setAllHOAs] = useState<SearchDropdownItem[]>([
-    {
-      label: "Amhurst",
-      id: "1",
-    },
-    {
-      label: "CreekHaven",
-      id: "2",
-    },
-    {
-      label: "Woodmont",
-      id: "3",
-    },
-  ]);
+
+  const {
+    data: hoaListResponse,
+  } = useSWR(
+    getDataSourceConnetionHOAListApiPath({
+      connectionId: Id.from(dataSourceRecord.connection!.id),
+      pagination: {
+        page: 1,
+        pageSize: 999,
+      },
+    }),
+    createFetcher<DataSourceConnectionTypes[]>(),
+  );
 
   if (dataSource === DataSource.UPLOAD) {
     return (
@@ -181,7 +181,7 @@ const DataSourceCard = ({
     ? `Select documents for your HOA`
     : `Connect to ${readableName} first to select documents`;
 
-  const getHOAName = () => hoa ? allHOAs.find((h) => h.id == hoa)?.label : "Select HOA";
+  const getHOAName = () => hoa && hoaListResponse ? hoaListResponse.response.find((h) => h.id == hoa)?.name : "Select HOA";
 
   return (
     <div>
@@ -209,7 +209,7 @@ const DataSourceCard = ({
         </div>
       </Tooltip>
       {showModal ? (
-        connection ? (
+        connection && hoaListResponse ? (
           <DocumentsSelectorModal
             dataSource={dataSource}
             dataSourceConnectionId={Id.from(connection.id)}
@@ -217,7 +217,12 @@ const DataSourceCard = ({
             show={showModal}
             hoa={hoa}
             setHoa={setHoa}
-            items={allHOAs}
+            items={hoaListResponse.response.map((h) => {
+              return {
+                id: h.id,
+                label: h.name,
+              };
+            })}
             onClose={() => setShowModal(false)}
             onDocumentsSelected={onDocumentsSelected}
           />
