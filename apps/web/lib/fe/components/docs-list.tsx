@@ -5,7 +5,7 @@ import { DataSourceRecord } from "../data-source-utils";
 import { getDataSourceConnetionDocTypesApiPath, getDataSourceConnetionDocumentsApiPath, getDataSourceConnetionHOAListApiPath, getDataSourceConnetionLinkApiPath } from "../api-paths";
 import { DataSourceConnectionDocumentResponse, Id, DataSourceConnectionDocumentLink, DataSourceConnectionTypes } from "@repo/core";
 import { createFetcher } from "../api";
-import { Tree } from 'primereact/tree';
+import { Tree, TreeExpandedKeysType } from 'primereact/tree';
 import 'react-folder-tree/dist/style.css';
 import 'styles/DocumentsList.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
@@ -108,6 +108,7 @@ export const FolderViewer = ({
   const [nodes, setNodes] = useState<TreeNode[]>([]);
   const [keyMapping, setKeyMapping] = useState(new Map<string, string>());
   const [selectedNodeKey, setSelectedNodeKey] = useState<string>('');
+  const [expandedKeys, setExpandedKeys] = useState<TreeExpandedKeysType>({});
 
   useEffect(() => {
     function dataToNodeData(data: DataSourceConnectionDocumentResponse[]): TreeNode[] {
@@ -204,28 +205,19 @@ export const FolderViewer = ({
               setSelectedNodeKey(clickedId);
             }
           }}
+          expandedKeys={expandedKeys} 
+          onToggle={(e) => setExpandedKeys(e.value)}
           onNodeClick={(e) => {
-            let tempNodes = [...nodes];
-            // find the node that was cliekd and change its expanded state
-            
-            // step one, decode the key to get the path
-            const key = e.node.key!.toString();
-            const path = key.split('-');
-            const pathLength = path.length;
-            let currNode = null;
-            for (let i = 0; i < pathLength; i++) {
-              if (i === 0) {
-                currNode = nodes[parseInt(path[i]!)];
-              } else if (i !== 0 && currNode) {
-                currNode = currNode?.children?.[parseInt(path[i]!)];
+            // expand the key
+            const tempExpandedKeys = {...expandedKeys};
+            if (!e.node.leaf) {
+              if (tempExpandedKeys[e.node.key!]) {
+                delete tempExpandedKeys[e.node.key!];
+              } else {
+                tempExpandedKeys[e.node.key!] = true;
               }
+              setExpandedKeys(tempExpandedKeys);
             }
-
-            if (currNode) {
-              currNode.expanded = !currNode.expanded;
-            }
-
-            setNodes(tempNodes);
           }}
           filter
           filterMode="lenient"
