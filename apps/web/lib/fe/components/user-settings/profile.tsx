@@ -113,7 +113,7 @@ const UserProfileSettings = () => {
             disabled
           />
         </div>
-        <Button type="submit" isProcessing={isFormSubmitting}>
+        <Button type="submit" isProcessing={isFormSubmitting} style={{ backgroundColor: "#6366F1" }}>
           Submit
         </Button>
       </form>

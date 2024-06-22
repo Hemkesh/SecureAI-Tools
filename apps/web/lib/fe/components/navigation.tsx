@@ -92,14 +92,14 @@ const MobileMenu = ({
     </div>
     <div className={tw(`pt-4 pb-3 border-t border-gray-400`)}>
       <div className={tw(`px-2 space-y-1`)}>
-        <Link
+        {/* <Link
           href={FrontendRoutes.DISCORD_INVITE}
           target="_blank"
           rel="noopener noreferrer"
           className={tw("ml-4")}
         >
           Discord
-        </Link>
+        </Link> */}
         {isLoggedIn ? (
           <a
             key="mobile-go-to-app"
@@ -141,12 +141,10 @@ const Navigation = ({ showLogIn }: INavigation) => {
           <div className={tw(`flex items-center`)}>
             <a href={"/"} className={tw("font-mono")}>
               <div className={tw(`flex flex-cols mt-4 mb-4 items-center`)}>
-                <Image
-                  className={tw(`h-16 w-16`)}
+                <img
+                  className={tw(`h-16`)}
                   src="/logo.png"
                   alt="logo"
-                  width={64}
-                  height={64}
                 />
                 <p
                   className={tw(
@@ -175,14 +173,14 @@ const Navigation = ({ showLogIn }: INavigation) => {
           </div>
           <div className={tw(`hidden md:block`)}>
             <div className={tw(`ml-4 flex items-center md:ml-6`)}>
-              <Link
+              {/* <Link
                 href={FrontendRoutes.DISCORD_INVITE}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={tw("ml-4")}
               >
                 Discord
-              </Link>
+              </Link> */}
               {isLoggedIn ? (
                 <Button
                   className={tw("border-0 mr-2")}
