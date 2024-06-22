@@ -113,7 +113,7 @@ export function Sidebar({
                     className={tw("z-50")}
                     placement="top"
                   >
-                    <Dropdown.Item
+                    {/* <Dropdown.Item
                       as="a"
                       href={FrontendRoutes.getOrgSettingsRoute(orgSlug)}
                     >
@@ -130,7 +130,7 @@ export function Sidebar({
                       href={FrontendRoutes.getDataSourcesRoute(orgSlug)}
                     >
                       Data sources
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Dropdown.Item as="a" href={FrontendRoutes.USER_SETTINGS}>
                       User settings
                     </Dropdown.Item>
