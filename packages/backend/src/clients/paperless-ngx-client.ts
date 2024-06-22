@@ -3,6 +3,7 @@ import {
   removeTrailingSlash,
   MimeType,
   DataSourceConnectionDocumentLink,
+  DataSourceConnectionTypes,
 } from "@repo/core";
 
 import {
@@ -77,6 +78,50 @@ export class PaperlessNgxClient {
     return await toClientResponse<DataSourceConnectionDocumentLink[]>(resp);
   }
 
+  async getHOAs(
+    page: number,
+    pageSize: number,
+  ): Promise<ClientResponse<TypesResponse>> {
+    const url = new URL(`${this.baseUrl}/api/storage_paths/`);
+
+    if (page) {
+      url.searchParams.set("page", page.toString());
+    }
+    if (pageSize) {
+      url.searchParams.set("page_size", pageSize.toString());
+    }
+
+    const resp = await fetch(url, {
+      headers: {
+        Authorization: `Token ${this.authToken}`,
+      },
+    });
+
+    return await toClientResponse<TypesResponse>(resp);
+  }
+
+  async getDocTypes(
+    page: number,
+    pageSize: number,
+  ): Promise<ClientResponse<TypesResponse>> {
+    const url = new URL(`${this.baseUrl}/api/document_types/`);
+
+    if (page) {
+      url.searchParams.set("page", page.toString());
+    }
+    if (pageSize) {
+      url.searchParams.set("page_size", pageSize.toString());
+    }
+
+    const resp = await fetch(url, {
+      headers: {
+        Authorization: `Token ${this.authToken}`,
+      },
+    });
+
+    return await toClientResponse<TypesResponse>(resp);
+  }
+
   async downloadDocument(id: number | string): Promise<ClientResponse<Blob>> {
     const url = new URL(`${this.baseUrl}/api/documents/${id}/download/`);
 
@@ -94,6 +139,11 @@ export class PaperlessNgxClient {
 interface DocumentsResponse {
   count: number;
   results: DocumentResult[];
+}
+
+interface TypesResponse {
+  count: number;
+  results: DataSourceConnectionTypes[];
 }
 
 interface DocumentResult {

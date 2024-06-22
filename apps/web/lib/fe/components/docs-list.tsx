@@ -2,10 +2,10 @@
 
 import useSWR from "swr";
 import { DataSourceRecord } from "../data-source-utils";
-import { getDataSourceConnetionDocumentsApiPath, getDataSourceConnetionLinkApiPath } from "../api-paths";
-import { DataSourceConnectionDocumentResponse, Id, DataSourceConnectionDocumentLink } from "@repo/core";
+import { getDataSourceConnetionDocTypesApiPath, getDataSourceConnetionDocumentsApiPath, getDataSourceConnetionHOAListApiPath, getDataSourceConnetionLinkApiPath } from "../api-paths";
+import { DataSourceConnectionDocumentResponse, Id, DataSourceConnectionDocumentLink, DataSourceConnectionTypes } from "@repo/core";
 import { createFetcher } from "../api";
-import { Tree } from 'primereact/tree';
+import { Tree, TreeExpandedKeysType } from 'primereact/tree';
 import 'react-folder-tree/dist/style.css';
 import 'styles/DocumentsList.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
@@ -23,18 +23,6 @@ import "@react-pdf-viewer/page-navigation/lib/styles/index.css";
 import { useEffect, useMemo, useState } from "react";
 import { Spinner } from "flowbite-react";
 import { TreeNode } from "primereact/treenode";
-
-const hoaIdToName = new Map<number, string>([
-  [1, 'Amhurst'],
-  [2, 'CreekHaven'],
-  [3, 'Woodmont Townhomes'],
-]);
-
-const docTypeToName = new Map<number, string>([
-  [1, 'ByLaws'],
-  [2, 'CC&Rs'],
-  [3, 'Articles of Incorporation'],
-]);
 
 export const DocsList = ({
   dataSourceRecord,
@@ -57,11 +45,42 @@ export const DocsList = ({
     createFetcher<DataSourceConnectionDocumentResponse[]>(),
   );
 
+  const {
+    data: hoaListResponse,
+  } = useSWR(
+    getDataSourceConnetionHOAListApiPath({
+      connectionId: Id.from(dataSourceRecord.connection!.id),
+      pagination: {
+        page: 1,
+        pageSize: 999,
+      },
+    }),
+    createFetcher<DataSourceConnectionTypes[]>(),
+  );
+
+  const {
+    data: docTypesResponse,
+  } = useSWR(
+    getDataSourceConnetionDocTypesApiPath({
+      connectionId: Id.from(dataSourceRecord.connection!.id),
+      pagination: {
+        page: 1,
+        pageSize: 999,
+      },
+    }),
+    createFetcher<DataSourceConnectionTypes[]>(),
+  );
+
   return (
     <div className="w-full flex flex-row">
       {
-        dataSourceDocumentsResponse ?
-          <FolderViewer filesData={dataSourceDocumentsResponse.response} setDocId={setDocId}/> :
+        dataSourceDocumentsResponse && docTypesResponse && hoaListResponse ?
+          <FolderViewer 
+            filesData={dataSourceDocumentsResponse.response}
+            hoaListResponse={hoaListResponse.response}
+            docTypesResponse={docTypesResponse.response}
+            setDocId={setDocId}
+          /> :
           <div className="w-full">
             <Spinner
               className="m-auto"
@@ -77,14 +96,19 @@ export const DocsList = ({
 
 export const FolderViewer = ({
   filesData,
+  hoaListResponse,
+  docTypesResponse,
   setDocId,
 }: {
   filesData: DataSourceConnectionDocumentResponse[],
+  hoaListResponse: DataSourceConnectionTypes[],
+  docTypesResponse: DataSourceConnectionTypes[],
   setDocId: (docId: number) => void
 }) => {
   const [nodes, setNodes] = useState<TreeNode[]>([]);
   const [keyMapping, setKeyMapping] = useState(new Map<string, string>());
   const [selectedNodeKey, setSelectedNodeKey] = useState<string>('');
+  const [expandedKeys, setExpandedKeys] = useState<TreeExpandedKeysType>({});
 
   useEffect(() => {
     function dataToNodeData(data: DataSourceConnectionDocumentResponse[]): TreeNode[] {
@@ -100,8 +124,8 @@ export const FolderViewer = ({
           continue;
         }
 
-        const hoaName: string = hoaIdToName.get(hoaId)!;
-        const docType: string = docTypeToName.get(docId)!;
+        const hoaName: string = hoaListResponse.find(hoa => hoa.id === hoaId)!.name;
+        const docType: string = docTypesResponse.find(dt => dt.id === docId)!.name;
 
         if (!hoaName || !docType) {
           continue;
@@ -181,28 +205,19 @@ export const FolderViewer = ({
               setSelectedNodeKey(clickedId);
             }
           }}
+          expandedKeys={expandedKeys} 
+          onToggle={(e) => setExpandedKeys(e.value)}
           onNodeClick={(e) => {
-            let tempNodes = [...nodes];
-            // find the node that was cliekd and change its expanded state
-            
-            // step one, decode the key to get the path
-            const key = e.node.key!.toString();
-            const path = key.split('-');
-            const pathLength = path.length;
-            let currNode = null;
-            for (let i = 0; i < pathLength; i++) {
-              if (i === 0) {
-                currNode = nodes[parseInt(path[i]!)];
-              } else if (i !== 0 && currNode) {
-                currNode = currNode?.children?.[parseInt(path[i]!)];
+            // expand the key
+            const tempExpandedKeys = {...expandedKeys};
+            if (!e.node.leaf) {
+              if (tempExpandedKeys[e.node.key!]) {
+                delete tempExpandedKeys[e.node.key!];
+              } else {
+                tempExpandedKeys[e.node.key!] = true;
               }
+              setExpandedKeys(tempExpandedKeys);
             }
-
-            if (currNode) {
-              currNode.expanded = !currNode.expanded;
-            }
-
-            setNodes(tempNodes);
           }}
           filter
           filterMode="lenient"

@@ -151,6 +151,7 @@ export const ResetPassword = ({
                 isEmpty(newPasswordConfirm) ||
                 newPassword !== newPasswordConfirm
               }
+              style={{ backgroundColor: "#6366F1" }}
             >
               Submit
             </Button>

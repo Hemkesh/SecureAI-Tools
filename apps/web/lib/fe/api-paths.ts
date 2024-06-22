@@ -300,6 +300,27 @@ export const getDataSourceConnetionLinkApiPath = ({
   return `/api/data-source-connections/${connectionId}/links?documentId=${documentId}`;
 };
 
+
+export const getDataSourceConnetionHOAListApiPath = ({
+  connectionId,
+  pagination,
+}: {
+  connectionId: Id<IdType.DataSourceConnection>;
+  pagination: PaginationParams;
+}): string => {
+  return `/api/data-source-connections/${connectionId}/hoa?page=${pagination.page}&pageSize=${pagination.pageSize}`;
+};
+
+export const getDataSourceConnetionDocTypesApiPath = ({
+  connectionId,
+  pagination,
+}: {
+  connectionId: Id<IdType.DataSourceConnection>;
+  pagination: PaginationParams;
+}): string => {
+  return `/api/data-source-connections/${connectionId}/doc-types?page=${pagination.page}&pageSize=${pagination.pageSize}`;
+}
+
 export const getDataSourceAuthorizeUrlApiPath = (
   dataSource: DataSource,
   redirectUri: string,

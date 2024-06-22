@@ -55,19 +55,18 @@ const LogInPage: NextPage = () => {
 
   return (
     <Layout>
-      <Navigation />
+      {/* <Navigation /> */}
 
       <Toasts toasts={toasts} />
 
       <div className={tw("max-w-xl mx-auto mt-32 py-16 px-14 sm:px-6 lg:px-8")}>
         <div className={tw("flex flex-cols")}>
           <div className={tw("flex items-center mr-5")}>
-            <Image
-              className={tw("h-20 w-20 mx-auto")}
+            <img
+              className={tw("w-20 mx-auto")}
               src="/logo.png"
               alt="logo"
               width={80}
-              height={80}
             />
           </div>
           <div
@@ -133,6 +132,7 @@ const LogInPage: NextPage = () => {
                     className={tw("w-full")}
                     isProcessing={isSubmitting}
                     disabled={isSubmitting}
+                    style={{ backgroundColor: "#6366F1" }}
                   >
                     Log In
                   </Button>

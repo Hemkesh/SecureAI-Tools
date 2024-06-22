@@ -82,10 +82,6 @@ export default function NewChat({ orgSlug }: { orgSlug: string }) {
           children: <p>Please select at least one document to chat.</p>,
         });
         document.getElementById("select-documents-box")?.click();
-        // listen to selected-documents event and call handle submit
-        document.addEventListener("selected-documents", () => {
-          handleSubmit();
-        })
         return;
       }
 
