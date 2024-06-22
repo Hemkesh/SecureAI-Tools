@@ -11,6 +11,7 @@ version: "3.8"
 services:
   web:
     image: test-secure-ai-tools
+    restart: unless-stopped
     volumes:
       - ./web:/app/volume
     env_file:
@@ -38,6 +39,7 @@ services:
 
   task-master:
     image: test-secure-ai-tools
+    restart: unless-stopped
     volumes:
       - ./web:/app/volume
     env_file:
@@ -80,6 +82,7 @@ services:
 
   db:
     image: postgres:latest
+    restart: unless-stopped
     volumes:
       - ./db:/var/lib/postgresql/data
     environment:
@@ -100,6 +103,7 @@ services:
 
   message-broker:
     image: rabbitmq:management
+    restart: unless-stopped
     volumes:
       - ./message-broker:/var/lib/rabbitmq
     environment:
@@ -113,6 +117,7 @@ services:
 
   inference:
     image: ollama/ollama:latest
+    restart: unless-stopped
     volumes:
       - ./inference:/root/.ollama
     #
