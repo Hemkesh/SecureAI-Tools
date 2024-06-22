@@ -143,7 +143,14 @@ const MessageEntry = ({
             <HiOutlineClipboard
               className={tw("cursor-pointer hover:bg-slate-200 rounded")}
               onClick={(event) => {
-                clipboardCopy(message.content);
+                clipboardCopy(`${message.content}\n\n${citations ? citations
+                  .sort((a, b) => a.score - b.score)
+                  .map((c) => {
+                    const doc = documents?.find(
+                      (d) => d.id === c.documentId,
+                    );
+                    return `Page ${c.pageNumber} (lines ${c.fromLine}-${c.toLine})${doc ? `, ${doc.name}` : null}`;
+                  }).join("\n") : ""}`);
 
                 // Show success icon for a bit and then go back to copy-clipboard icon.
                 setCopiedToClipboard(true);
