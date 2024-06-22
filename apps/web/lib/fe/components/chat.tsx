@@ -8,6 +8,7 @@ import clipboardCopy from "clipboard-copy";
 import { MdSend } from "react-icons/md";
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import 'primeicons/primeicons.css';
 
 import ChatInput from "lib/fe/components/chat-input";
 import { ChatResponse } from "lib/types/api/chat.response";
@@ -137,36 +138,71 @@ const MessageEntry = ({
               </div>
             ) : null}
           </div>
-          {copiedToClipboard ? (
-            <HiOutlineClipboardCheck />
-          ) : (
-            <HiOutlineClipboard
-              className={tw("cursor-pointer hover:bg-slate-200 rounded")}
-              onClick={(event) => {
-                clipboardCopy(`${message.content}\n\n${citations ? citations
-                  .sort((a, b) => a.score - b.score)
-                  .map((c) => {
-                    const doc = documents?.find(
-                      (d) => d.id === c.documentId,
-                    );
-                    return `Page ${c.pageNumber} (lines ${c.fromLine}-${c.toLine})${doc ? `, ${doc.name}` : null}`;
-                  }).join("\n") : ""}`);
+          {
+            message.role != "user" &&
+            <>
+              {copiedToClipboard ? (
+                <div
+                  
+                  style={{
+                    backgroundColor: "#EfEfEf",
+                    height: "fit-content",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "2rem",
+                    fontSize: "0.8rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
 
-                // Show success icon for a bit and then go back to copy-clipboard icon.
-                setCopiedToClipboard(true);
-                setTimeout(() => {
-                  setCopiedToClipboard(false);
-                }, 2048);
+                  }}
+                >
+                  <i className="pi pi-check" style={{ fontSize: '1rem', color: 'green' }}></i>
+                  <span> Copied</span>
+                </div>
+              ) : (
+                <div
+                  className={tw("cursor-pointer hover:bg-slate-200 rounded")}
+                  onClick={(event) => {
+                    clipboardCopy(`${message.content}\n\n${citations ? citations
+                      .sort((a, b) => a.score - b.score)
+                      .map((c) => {
+                        const doc = documents?.find(
+                          (d) => d.id === c.documentId,
+                        );
+                        return `Page ${c.pageNumber} (lines ${c.fromLine}-${c.toLine})${doc ? `, ${doc.name}` : null}`;
+                      }).join("\n") : ""}`);
 
-                Analytics.track({
-                  event: Analytics.Event.ChatMessageCopiedToClipboard,
-                  payload: {
-                    messageRole: message.role,
-                  },
-                });
-              }}
-            />
-          )}
+                    // Show success icon for a bit and then go back to copy-clipboard icon.
+                    setCopiedToClipboard(true);
+                    setTimeout(() => {
+                      setCopiedToClipboard(false);
+                    }, 2048);
+
+                    Analytics.track({
+                      event: Analytics.Event.ChatMessageCopiedToClipboard,
+                      payload: {
+                        messageRole: message.role,
+                      },
+                    });
+                  }}
+                  style={{
+                    backgroundColor: "#EfEfEf",
+                    height: "fit-content",
+                    padding: "0.5rem 1rem",
+                    borderRadius: "2rem",
+                    fontSize: "0.8rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <i className="pi pi-copy" style={{ fontSize: '1rem' }}></i>
+                  <span>Copy</span>
+                </div>
+              )}
+            </>
+          }
         </div>
       </div>
     </div>
@@ -485,7 +521,7 @@ export function Chat({
               {isLoading ? (
                 <Spinner aria-label="generating response..." />
               ) : (
-                <MdSend className={tw("h-6 w-6")} style={{ color: "#6366F1" }}/>
+                <MdSend className={tw("h-6 w-6")} style={{ color: "#6366F1" }} />
               )}
             </Button>
           </div>

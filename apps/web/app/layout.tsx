@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <SessionProvider>
       <html lang="en">
-        <body>{children}</body>
+        <body style={{ height: "100vh", overflow: "hidden" }}>{children}</body>
       </html>
     </SessionProvider>
   );
