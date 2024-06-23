@@ -143,13 +143,14 @@ const DataSourceCard = ({
   const {
     data: hoaListResponse,
   } = useSWR(
+    dataSourceRecord.connection ?
     getDataSourceConnetionHOAListApiPath({
       connectionId: Id.from(dataSourceRecord.connection!.id),
       pagination: {
         page: 1,
         pageSize: 999,
       },
-    }),
+    }) : null,
     createFetcher<DataSourceConnectionTypes[]>(),
   );
 
