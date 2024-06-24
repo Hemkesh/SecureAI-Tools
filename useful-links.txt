@@ -1,0 +1,2 @@
+/village/settings
+/village/users?page=1&search=
