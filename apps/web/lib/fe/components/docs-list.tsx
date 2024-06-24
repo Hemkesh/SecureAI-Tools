@@ -120,16 +120,25 @@ export const FolderViewer = ({
         const hoaId = doc.metadata?.storage_path;
         const docId = doc.metadata?.document_type;
 
-        if (!hoaId || !docId) {
-          continue;
+        let hoaName: string = '';
+        let docType: string = '';
+
+        if (hoaId) {
+          const searchHOAName = hoaListResponse.find(hoa => hoa.id === hoaId);
+          if (searchHOAName) {
+            hoaName = searchHOAName.name;
+          }
         }
 
-        const hoaName: string = hoaListResponse.find(hoa => hoa.id === hoaId)!.name;
-        const docType: string = docTypesResponse.find(dt => dt.id === docId)!.name;
-
-        if (!hoaName || !docType) {
-          continue;
+        if (docId) {
+          const searchDocTypeName = docTypesResponse.find(dt => dt.id === docId);
+          if (searchDocTypeName) {
+            docType = searchDocTypeName.name;
+          }
         }
+
+        hoaName = hoaName ? hoaName : 'Master';
+        docType = docType ? docType : 'Others'; 
 
         if (!hoaMAP.has(hoaName)) {
           hoaMAP.set(hoaName, new Map<string, DataSourceConnectionDocumentResponse[]>());

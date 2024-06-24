@@ -111,7 +111,7 @@ export const DocumentsSelectorModal = ({
   const renderCells: RenderCellsFn<DataSourceConnectionDocumentResponse> = ({
     item,
   }) => {
-    if (item.metadata?.storage_path != parseInt(selectedHOA)) {
+    if (item.metadata?.storage_path != undefined &&item.metadata?.storage_path != parseInt(selectedHOA)) {
       return []
     }
     return [
