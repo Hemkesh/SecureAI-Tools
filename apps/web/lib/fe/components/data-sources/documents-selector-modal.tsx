@@ -160,7 +160,7 @@ export const DocumentsSelectorModal = ({
       setCurrentlySelectedDocuments((old) => {
         const newItems: SelectedDocument[] = [];
         dataSourceDocumentsResponse.response.forEach((d) => {
-          if (!selectedExternalIds.has(d.externalId) && d.metadata?.storage_path == parseInt(selectedHOA)) {
+          if (!selectedExternalIds.has(d.externalId) && (d.metadata?.storage_path == undefined || d.metadata?.storage_path == parseInt(selectedHOA))) {
             newItems.push({
               dataSource: dataSource,
               externalId: d.externalId,
