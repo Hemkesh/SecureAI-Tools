@@ -15,7 +15,7 @@ services:
       - ./dev-data/db:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=secure-ai-tools-dev
-      - POSTGRES_PASSWORD=SecureAIToolsFTW!
+      - POSTGRES_PASSWORD=SecureAIToolsFTW
       - POSTGRES_DB=secure-ai-tools-dev-db
     ports:
       - 5432:5432
@@ -36,3 +36,14 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+  
+  db-migrate-and-seed:
+    image: test-secure-build
+    volumes:
+      - ./dev-data/web:/app/volume
+    environment:
+      - DATABASE_URL=postgresql://secure-ai-tools-dev:SecureAIToolsFTW@db-dev:5432/secure-ai-tools-dev-db
+    command: sh -c "cd /app && sh apps/web/tools/db-migrate-and-seed.sh 1"
+    deploy:
+      restart_policy:
+        condition: none
