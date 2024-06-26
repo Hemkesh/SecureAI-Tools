@@ -9,6 +9,7 @@ import { MdSend } from "react-icons/md";
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import 'primeicons/primeicons.css';
+import 'styles/ChatPage.css'
 
 import ChatInput from "lib/fe/components/chat-input";
 import { ChatResponse } from "lib/types/api/chat.response";
@@ -44,6 +45,7 @@ import {
   IdType,
 } from "@repo/core";
 import { defaultPrePrompt } from "lib/types/api/default-pre-prompt";
+import { text } from "stream/consumers";
 
 export interface DocumentsWithIndexingStatus extends DocumentResponse {
   indexingStatus: DocumentIndexingStatus;
@@ -61,12 +63,70 @@ const MessageEntry = ({
   onJumpToPage?: (docId: string, pageIndex: number) => void;
 }) => {
   const [copiedToClipboard, setCopiedToClipboard] = useState<boolean>(false);
+  const [positiveFeedback, setPositiveFeedback] = useState<boolean | undefined>(undefined);
+  const [selectedFeedback, setSelectedFeedback] = useState<string[]>([]);
   const prePrompt = process.env.PRE_PROMPT ?? defaultPrePrompt;
+
+  const event = ({ action, category, label, value }: any) => {
+    (window as any).gtag('event', action, {
+      event_category: category,
+      event_label: label,
+      value: value,
+    });
+  };
+
+  const positiveClick = () => {
+    event({
+      action: 'positive_click',
+      category: 'ai_chat_page',
+      label: 'positive',
+      value: message.id,
+    });
+
+    setPositiveFeedback(true);
+  };
+
+  const negativeClick = () => {
+    event({
+      action: 'negative_click',
+      category: 'ai_chat_page',
+      label: 'negative',
+      value: message.id,
+    });
+
+    setPositiveFeedback(false);
+  };
+
+  const feedbackClick = (feedbackId: string) => {
+    setSelectedFeedback((selectedFeedback) => {
+      if (selectedFeedback.includes(feedbackId)) {
+        return selectedFeedback.filter((id) => id !== feedbackId);
+      } else {
+        event({
+          action: 'feedback_click',
+          category: 'ai_chat_page',
+          label: feedbackId,
+          value: message.id,
+        })
+        return [...selectedFeedback, feedbackId];
+      }
+    });
+  };
+
+  const feedbackText = [
+    { label: "Not factually correct", id: "wrong-answer" },
+    { label: "Not useful", id: "not-useful" },
+    { label: "Wrong citations", id: "wrong-citations" },
+    { label: "Does not apply to HOA", id: "does-not-apply-to-hoa" },
+    { label: "Could not find answer", id: "could-not-find-answer" },
+    { label: "Other", id: "other" },
+  ];
+
   return (
     <div
       key={message.id}
       className={tw(
-        "group w-full text-token-text-primary border-b border-black/10 dark:border-gray-900/50",
+        "group w-full text-token-text-primary border-b border-black/10 dark:border-gray-900/50 messages",
         message.role === "user"
           ? "dark:bg-gray-800"
           : "bg-gray-50 dark:bg-[#444654]",
@@ -97,6 +157,36 @@ const MessageEntry = ({
                 )}
               </Markdown>
             </div>
+            {message.role != "user" &&
+              <div className={tw("mt-4 border-t")}>
+                <br></br>
+                {
+                  <div className="flex gap-2">
+                    <i
+                      className={"pi pi-thumbs-up response-btn positive" + (positiveFeedback === true ? " response-btn-active-positive" : "")}
+                      onClick={positiveClick}
+                    />
+                    <i
+                      className={"pi pi-thumbs-down response-btn negative" + (positiveFeedback === false ? " response-btn-active-negative" : "")}
+                      onClick={negativeClick}
+                    />
+                  </div>
+                }
+                {
+                  positiveFeedback === false &&
+                  <div className="feedback-container">
+                    <span>Tell us more ({selectedFeedback.length}/{feedbackText.length}):</span>
+                    <div className="negative-feedback-box-container">
+                      {
+                        feedbackText.map((f) => (
+                          <span className={"feedback-box" + (selectedFeedback.includes(f.id) ? " feedback-box-selected" : "")} id={f.id} onClick={() => feedbackClick(f.id)}> {f.label}</span>
+                        ))
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
             {citations && citations.length > 0 ? (
               <div className={tw("mt-4 border-t")}>
                 <div className={tw("mt-2 text-xs")}>
@@ -111,9 +201,8 @@ const MessageEntry = ({
                         return (
                           <li key={c.id} className={tw("ml-5 pb-2")}>
                             <Tooltip
-                              content={`Jump to page ${c.pageNumber} of ${
-                                doc?.name ?? ""
-                              }`}
+                              content={`Jump to page ${c.pageNumber} of ${doc?.name ?? ""
+                                }`}
                               animation="duration-1000"
                             >
                               <Link
@@ -143,7 +232,7 @@ const MessageEntry = ({
             <>
               {copiedToClipboard ? (
                 <div
-                  
+
                   style={{
                     backgroundColor: "#EfEfEf",
                     height: "fit-content",
@@ -302,6 +391,12 @@ export function Chat({
       newMessages.pop();
       newMessages.push(chatMessageResponseToMessage(lastChatMessage));
       setMessages(newMessages);
+
+      // scroll to bottom
+      const lastMessage = document.querySelector('.messages:last-child');
+      if (lastMessage) {
+        lastMessage.scrollIntoView();
+      }
     },
   });
 
@@ -419,14 +514,14 @@ export function Chat({
         </header>
         {messages.length > 0
           ? messages.map((m) => (
-              <MessageEntry
-                key={m.id}
-                message={m}
-                citations={messageCitations.get(m.id)}
-                documents={documents}
-                onJumpToPage={onJumpToPage}
-              />
-            ))
+            <MessageEntry
+              key={m.id}
+              message={m}
+              citations={messageCitations.get(m.id)}
+              documents={documents}
+              onJumpToPage={onJumpToPage}
+            />
+          ))
           : null}
         {isProcessingDocuments && documents ? (
           <div className={tw("flex flex-col items-center mt-16")}>
@@ -478,6 +573,13 @@ export function Chat({
                   role: "user",
                 },
               });
+
+              // scroll to bottom
+              const lastMessage = document.querySelector('.messages:last-child');
+              if (lastMessage) {
+                lastMessage.scrollIntoView();
+              }
+              
               // Then trigger generation
               handleSubmit(e);
             } catch (e) {

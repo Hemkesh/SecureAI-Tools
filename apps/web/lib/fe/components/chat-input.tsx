@@ -41,7 +41,7 @@ export default function ChatInput({
           }
         }}
         disabled={disabled}
-        onKeyUp={(e) => {
+        onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             onEnter();
