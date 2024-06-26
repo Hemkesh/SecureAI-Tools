@@ -62,3 +62,5 @@ deployment/inference
 deployment/message-broker
 deployment/vector-db
 deployment/web
+
+google-analytics-id.tsx
