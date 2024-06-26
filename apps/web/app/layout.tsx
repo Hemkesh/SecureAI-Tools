@@ -6,6 +6,7 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
 
 import "../styles/globals.css";
+import GoogleAnalytics from "pages/google-analytics";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <SessionProvider>
       <html lang="en">
+        <GoogleAnalytics />
         <body style={{ height: "100vh", overflow: "hidden" }}>{children}</body>
       </html>
     </SessionProvider>
